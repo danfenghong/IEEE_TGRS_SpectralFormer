@@ -104,17 +104,7 @@ class Transformer(nn.Module):
                 x = attn(x, mask = mask)
                 x = ff(x)
                 nl += 1
-        elif self.mode == 'Add':
-            last_output = []
-            nl = 0
-            for attn, ff in self.layers:
-                last_output.append(x)
-                if nl > 2:
-                    # only for depth=5
-                    x = x + last_output[5-1-nl]
-                x = attn(x, mask=mask)
-                x = ff(x)
-                nl += 1
+
         return x
 
 class ViT(nn.Module):
