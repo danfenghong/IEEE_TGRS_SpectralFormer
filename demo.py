@@ -16,7 +16,7 @@ import os
 
 parser = argparse.ArgumentParser("HSI")
 parser.add_argument('--dataset', choices=['Indian','Pavia', 'Houston'], default='Indian', help='dataset to use')
-parser.add_argument('--mode', choices=['ViT','Add', 'CAF'], default='ViT', help='mode choice')
+parser.add_argument('--mode', choices=['ViT', 'CAF'], default='ViT', help='mode choice')
 parser.add_argument('--gpu_id', default='1', help='gpu id')
 parser.add_argument('--seed', type=int, default=0, help='number of seed')
 parser.add_argument('--batch_size', type=int, default=64, help='number of batch size')
