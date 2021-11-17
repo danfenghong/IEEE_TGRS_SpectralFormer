@@ -56,7 +56,7 @@ You should have received a copy of the GNU General Public License along with thi
 Contact Information:
 --------------------
 
-Danfeng Hong: hongdanfeng1989@gmail.com<br>
-Danfeng Hong is with the Univ. Grenoble Alpes, CNRS, Grenoble INP, GIPSA-lab, 38000 Grenoble, France.
+Danfeng Hong: hongdf@aircas.ac.cn<br>
+Danfeng Hong is with the Key Laboratory of Digital Earth Science, Aerospace Information Research Institute, Chinese Academy of Sciences, 100094 Beijing, China. 
 
 If emergency, you can also add my QQ: 345088114.
