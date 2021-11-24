@@ -18,9 +18,9 @@ Danfeng Hong, Zhu Han, Jing Yao, Lianru Gao, Bing Zhang, Antonio Plaza, Jocelyn 
     @article{hong2021spectralformer,
       title={Spectralformer: Rethinking hyperspectral image classification with transformers},
       author={Hong, Danfeng and Han, Zhu and Yao, Jing and Gao, Lianru and Zhang, Bing and Plaza, Antonio and Chanussot, Jocelyn},
-      journal={IEEE Transactions on Geoscience and Remote Sensing},
-      year={2022},
-      note = {DOI: 10.1109/TGRS.2021.3130716}
+      journal={IEEE Trans. Geosci. Remote Sens.},
+      note = {DOI: 10.1109/TGRS.2021.3130716},
+      year={2022}  
     }
     
 System-specific notes
