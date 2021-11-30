@@ -4,7 +4,7 @@
 
 ___________
 
-The code in this toolbox implements the ["Spectralformer: Rethinking hyperspectral image classification with transformers"](https://arxiv.org/pdf/2107.02988.pdf). More specifically, it is detailed as follow.
+The code in this toolbox implements the ["Spectralformer: Rethinking hyperspectral image classification with transformers"](https://ieeexplore.ieee.org/document/9627165). More specifically, it is detailed as follow.
 
 ![alt text](./SpectralFormer.PNG)
 
