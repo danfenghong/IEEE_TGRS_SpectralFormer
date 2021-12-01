@@ -33,11 +33,22 @@ This toolbox consists of two proposed modules, i.e., group-wise spectral embeddi
 
 Here an example experiment is given by using **Indian Pines hyperspectral data**. Directly run **demo.py** functions with different network parameter settings to produce the results. Please note that due to the randomness of the parameter initialization, the experimental results might have slightly different from those reported in the paper.
 
-:exclamation: You may need to manually download `IndianPine.mat` to your local in the folder under path `Codes_SpectralFormer/data/`, due to their too large file size, from the following links of google drive or baiduyun:
+:exclamation: Please kindly be careful on assigning arguments such as `epoches` and `weight_decay`. For re-performing of the last three columns in TABLE VIII of our paper, i.e., the **ViT**, **Pixel-wise** and **Patch-wise SpectralFormer** on the Indian Pines dataset, you can either re-train by following:
 
-Google drive: https://drive.google.com/drive/folders/1nRphkwDZ74p-Al_O_X3feR24aRyEaJDY?usp=sharing
+ViT: `python demo.py --dataset='Indian' --epoch=1400 --patches=1 --band_patches=1 --mode='ViT' --weight_decay=0`
 
-Baiduyun: https://pan.baidu.com/s/1rY9hj7Ku1Un4PPOjEFpEfQ (access code: 6dme)
+Pixel-wise SpectralFormer: `python demo.py --dataset='Indian' --epoches=290 --patches=1 --band_patches=3 --mode='CAF' --weight_decay=0`
+
+Patch-wise SpectralFormer: `python demo.py --dataset='Indian' --epoches=300 --patches=7 --band_patches=3 --mode='CAF' --weight_decay=5e-3`
+
+or directly test by loading the network parameters we have tuned locally,
+
+ViT: `python demo.py --dataset='Indian' --flag_test=test --patches=1 --band_patches=1 --mode='ViT'`
+
+Pixel-wise SpectralFormer: `python demo.py --dataset='Indian' --flag_test=test --patches=1 --band_patches=3 --mode='CAF'`
+
+Patch-wise SpectralFormer: `python demo.py --dataset='Indian' --flag_test=test --patches=7 --band_patches=3 --mode='CAF'`
+
 
 If you want to run the code in your own data, you can accordingly change the input (e.g., data, labels) and tune the parameters.
 
