@@ -10,20 +10,23 @@ from torch.autograd import Variable
 from vit_pytorch import ViT
 from sklearn.metrics import confusion_matrix
 
+import matplotlib.pyplot as plt
+from matplotlib import colors
 import numpy as np
 import time
 import os
 
 parser = argparse.ArgumentParser("HSI")
-parser.add_argument('--dataset', choices=['Indian','Pavia', 'Houston'], default='Indian', help='dataset to use')
+parser.add_argument('--dataset', choices=['Indian', 'Pavia', 'Houston'], default='Indian', help='dataset to use')
+parser.add_argument('--flag_test', choices=['test', 'train'], default='train', help='testing mark')
 parser.add_argument('--mode', choices=['ViT', 'CAF'], default='ViT', help='mode choice')
-parser.add_argument('--gpu_id', default='1', help='gpu id')
+parser.add_argument('--gpu_id', default='0', help='gpu id')
 parser.add_argument('--seed', type=int, default=0, help='number of seed')
 parser.add_argument('--batch_size', type=int, default=64, help='number of batch size')
 parser.add_argument('--test_freq', type=int, default=5, help='number of evaluation')
 parser.add_argument('--patches', type=int, default=1, help='number of patches')
 parser.add_argument('--band_patches', type=int, default=1, help='number of related band')
-parser.add_argument('--epoches', type=int, default=1000, help='epoch number')
+parser.add_argument('--epoches', type=int, default=300, help='epoch number')
 parser.add_argument('--learning_rate', type=float, default=5e-4, help='learning rate')
 parser.add_argument('--gamma', type=float, default=0.9, help='gamma')
 parser.add_argument('--weight_decay', type=float, default=0, help='weight_decay')
@@ -141,21 +144,21 @@ def train_and_test_data(mirror_image, band, train_point, test_point, true_point,
         x_train[i,:,:,:] = gain_neighborhood_pixel(mirror_image, train_point, i, patch)
     for j in range(test_point.shape[0]):
         x_test[j,:,:,:] = gain_neighborhood_pixel(mirror_image, test_point, j, patch)
-    # for k in range(true_point.shape[0]):
-    #     x_true[k,:,:,:] = gain_neighborhood_pixel(mirror_image, true_point, k, patch)
+    for k in range(true_point.shape[0]):
+        x_true[k,:,:,:] = gain_neighborhood_pixel(mirror_image, true_point, k, patch)
     print("x_train shape = {}, type = {}".format(x_train.shape,x_train.dtype))
     print("x_test  shape = {}, type = {}".format(x_test.shape,x_test.dtype))
-    # print("x_true  shape = {}, type = {}".format(x_true.shape,x_test.dtype))
+    print("x_true  shape = {}, type = {}".format(x_true.shape,x_test.dtype))
     print("**************************************************")
-
+    
     x_train_band = gain_neighborhood_band(x_train, band, band_patch, patch)
     x_test_band = gain_neighborhood_band(x_test, band, band_patch, patch)
-    # x_true_band = gain_neighborhood_band(x_true, band, band_patch, patch)
+    x_true_band = gain_neighborhood_band(x_true, band, band_patch, patch)
     print("x_train_band shape = {}, type = {}".format(x_train_band.shape,x_train_band.dtype))
     print("x_test_band  shape = {}, type = {}".format(x_test_band.shape,x_test_band.dtype))
-    # print("x_true_band  shape = {}, type = {}".format(x_true_band.shape,x_true_band.dtype))
+    print("x_true_band  shape = {}, type = {}".format(x_true_band.shape,x_true_band.dtype))
     print("**************************************************")
-    return x_train_band, x_test_band
+    return x_train_band, x_test_band, x_true_band
 #-------------------------------------------------------------------------------
 # 标签y_train, y_test
 def train_and_test_label(number_train, number_test, number_true, num_classes):
@@ -167,17 +170,17 @@ def train_and_test_label(number_train, number_test, number_true, num_classes):
             y_train.append(i)
         for k in range(number_test[i]):
             y_test.append(i)
-    # for i in range(num_classes+1):
-    #     for j in range(number_true[i]):
-    #         y_true.append(i)
+    for i in range(num_classes+1):
+        for j in range(number_true[i]):
+            y_true.append(i)
     y_train = np.array(y_train)
     y_test = np.array(y_test)
-    # y_true = np.array(y_true)
+    y_true = np.array(y_true)
     print("y_train: shape = {} ,type = {}".format(y_train.shape,y_train.dtype))
     print("y_test: shape = {} ,type = {}".format(y_test.shape,y_test.dtype))
-    # print("y_true: shape = {} ,type = {}".format(y_true.shape,y_true.dtype))
+    print("y_true: shape = {} ,type = {}".format(y_true.shape,y_true.dtype))
     print("**************************************************")
-    return y_train, y_test
+    return y_train, y_test, y_true
 #-------------------------------------------------------------------------------
 class AvgrageMeter(object):
 
@@ -216,13 +219,13 @@ def train_epoch(model, train_loader, criterion, optimizer):
     pre = np.array([])
     for batch_idx, (batch_data, batch_target) in enumerate(train_loader):
         batch_data = batch_data.cuda()
-        batch_target = batch_target.cuda()
+        batch_target = batch_target.cuda()   
 
         optimizer.zero_grad()
         batch_pred = model(batch_data)
         loss = criterion(batch_pred, batch_target)
         loss.backward()
-        optimizer.step()
+        optimizer.step()       
 
         prec1, t, p = accuracy(batch_pred, batch_target, topk=(1,))
         n = batch_data.shape[0]
@@ -240,10 +243,10 @@ def valid_epoch(model, valid_loader, criterion, optimizer):
     pre = np.array([])
     for batch_idx, (batch_data, batch_target) in enumerate(valid_loader):
         batch_data = batch_data.cuda()
-        batch_target = batch_target.cuda()
+        batch_target = batch_target.cuda()   
 
         batch_pred = model(batch_data)
-
+        
         loss = criterion(batch_pred, batch_target)
 
         prec1, t, p = accuracy(batch_pred, batch_target, topk=(1,))
@@ -252,7 +255,7 @@ def valid_epoch(model, valid_loader, criterion, optimizer):
         top1.update(prec1[0].data, n)
         tar = np.append(tar, t.data.cpu().numpy())
         pre = np.append(pre, p.data.cpu().numpy())
-
+        
     return tar, pre
 
 def test_epoch(model, test_loader, criterion, optimizer):
@@ -262,7 +265,7 @@ def test_epoch(model, test_loader, criterion, optimizer):
     pre = np.array([])
     for batch_idx, (batch_data, batch_target) in enumerate(test_loader):
         batch_data = batch_data.cuda()
-        batch_target = batch_target.cuda()
+        batch_target = batch_target.cuda()   
 
         batch_pred = model(batch_data)
 
@@ -328,8 +331,8 @@ print("height={0},width={1},band={2}".format(height, width, band))
 # obtain train and test data
 total_pos_train, total_pos_test, total_pos_true, number_train, number_test, number_true = chooose_train_and_test_point(TR, TE, label, num_classes)
 mirror_image = mirror_hsi(height, width, band, input_normalize, patch=args.patches)
-x_train_band, x_test_band = train_and_test_data(mirror_image, band, total_pos_train, total_pos_test, total_pos_true, patch=args.patches, band_patch=args.band_patches)
-y_train, y_test = train_and_test_label(number_train, number_test, number_true, num_classes)
+x_train_band, x_test_band, x_true_band = train_and_test_data(mirror_image, band, total_pos_train, total_pos_test, total_pos_true, patch=args.patches, band_patch=args.band_patches)
+y_train, y_test, y_true = train_and_test_label(number_train, number_test, number_true, num_classes)
 #-------------------------------------------------------------------------------
 # load data
 x_train=torch.from_numpy(x_train_band.transpose(0,2,1)).type(torch.FloatTensor) #[695, 200, 7, 7]
@@ -338,13 +341,13 @@ Label_train=Data.TensorDataset(x_train,y_train)
 x_test=torch.from_numpy(x_test_band.transpose(0,2,1)).type(torch.FloatTensor) # [9671, 200, 7, 7]
 y_test=torch.from_numpy(y_test).type(torch.LongTensor) # [9671]
 Label_test=Data.TensorDataset(x_test,y_test)
-#x_true=torch.from_numpy(x_true_band.transpose(0,2,1)).type(torch.FloatTensor)
-#y_true=torch.from_numpy(y_true).type(torch.LongTensor)
-#Label_true=Data.TensorDataset(x_true,y_true)
+x_true=torch.from_numpy(x_true_band.transpose(0,2,1)).type(torch.FloatTensor)
+y_true=torch.from_numpy(y_true).type(torch.LongTensor)
+Label_true=Data.TensorDataset(x_true,y_true)
 
 label_train_loader=Data.DataLoader(Label_train,batch_size=args.batch_size,shuffle=True)
 label_test_loader=Data.DataLoader(Label_test,batch_size=args.batch_size,shuffle=True)
-#label_true_loader=Data.DataLoader(Label_true,batch_size=100,shuffle=False)
+label_true_loader=Data.DataLoader(Label_true,batch_size=100,shuffle=False)
 
 #-------------------------------------------------------------------------------
 # create model
@@ -368,31 +371,53 @@ criterion = nn.CrossEntropyLoss().cuda()
 optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=args.epoches//10, gamma=args.gamma)
 #-------------------------------------------------------------------------------
-# start training
-print("start training")
-tic = time.time()
+if args.flag_test == 'test':
+    if args.mode == 'ViT':
+        model.load_state_dict(torch.load('./ViT.pt'))      
+    elif (args.mode == 'CAF') & (args.patches == 1):
+        model.load_state_dict(torch.load('./SpectralFormer_pixel.pt'))
+    elif (args.mode == 'CAF') & (args.patches == 7):
+        model.load_state_dict(torch.load('./SpectralFormer_patch.pt'))
+    else:
+        raise ValueError("Wrong Parameters") 
+    model.eval()
+    tar_v, pre_v = valid_epoch(model, label_test_loader, criterion, optimizer)
+    OA2, AA_mean2, Kappa2, AA2 = output_metric(tar_v, pre_v)
 
-for epoch in range(args.epoches):
-    scheduler.step()
+    # output classification maps
+    pre_u = test_epoch(model, label_true_loader, criterion, optimizer)
+    prediction_matrix = np.zeros((height, width), dtype=float)
+    for i in range(total_pos_true.shape[0]):
+        prediction_matrix[total_pos_true[i,0], total_pos_true[i,1]] = pre_u[i] + 1
+    plt.subplot(1,1,1)
+    plt.imshow(prediction_matrix, colors.ListedColormap(color_matrix))
+    plt.xticks([])
+    plt.yticks([])
+    plt.show()
+    savemat('matrix.mat',{'P':prediction_matrix, 'label':label})
+elif args.flag_test == 'train':
+    print("start training")
+    tic = time.time()
+    for epoch in range(args.epoches): 
+        scheduler.step()
 
-    # train model
-    model.train()
-    train_acc, train_obj, tar_t, pre_t = train_epoch(model, label_train_loader, criterion, optimizer)
-    OA1, AA_mean1, Kappa1, AA1 = output_metric(tar_t, pre_t)
-    print("Epoch: {:03d} train_loss: {:.4f} train_acc: {:.4f}"
-                    .format(epoch+1, train_obj, train_acc))
+        # train model
+        model.train()
+        train_acc, train_obj, tar_t, pre_t = train_epoch(model, label_train_loader, criterion, optimizer)
+        OA1, AA_mean1, Kappa1, AA1 = output_metric(tar_t, pre_t) 
+        print("Epoch: {:03d} train_loss: {:.4f} train_acc: {:.4f}"
+                        .format(epoch+1, train_obj, train_acc))
+        
 
+        if (epoch % args.test_freq == 0) | (epoch == args.epoches - 1):         
+            model.eval()
+            tar_v, pre_v = valid_epoch(model, label_test_loader, criterion, optimizer)
+            OA2, AA_mean2, Kappa2, AA2 = output_metric(tar_v, pre_v)
 
-    if (epoch % args.test_freq == 0) | (epoch == args.epoches - 1):
-        model.eval()
-        tar_v, pre_v = valid_epoch(model, label_test_loader, criterion, optimizer)
-        OA2, AA_mean2, Kappa2, AA2 = output_metric(tar_v, pre_v)
+    toc = time.time()
+    print("Running Time: {:.2f}".format(toc-tic))
+    print("**************************************************")
 
-
-toc = time.time()
-
-print("Running Time: {:.2f}".format(toc-tic))
-print("**************************************************")
 print("Final result:")
 print("OA: {:.4f} | AA: {:.4f} | Kappa: {:.4f}".format(OA2, AA_mean2, Kappa2))
 print(AA2)
@@ -404,3 +429,12 @@ def print_args(args):
         print("{0}: {1}".format(k,v))
 
 print_args(vars(args))
+
+
+
+
+
+
+
+
+
