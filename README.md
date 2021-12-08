@@ -41,7 +41,7 @@ Pixel-wise SpectralFormer: `python demo.py --dataset='Indian' --epoches=290 --pa
 
 Patch-wise SpectralFormer: `python demo.py --dataset='Indian' --epoches=300 --patches=7 --band_patches=3 --mode='CAF' --weight_decay=5e-3`
 
-or directly test by loading the network parameters we have tuned locally,
+or directly test by loading the network parameters in the `log` file we have tuned locally,
 
 ViT: `python demo.py --dataset='Indian' --flag_test=test --patches=1 --band_patches=1 --mode='ViT'`
 
@@ -49,6 +49,49 @@ Pixel-wise SpectralFormer: `python demo.py --dataset='Indian' --flag_test=test -
 
 Patch-wise SpectralFormer: `python demo.py --dataset='Indian' --flag_test=test --patches=7 --band_patches=3 --mode='CAF'`
 
+For the datasets of **Pavia University** and **Houston**, you can download the data we use from the following links of google drive or baiduyun:
+
+Google drive: https://drive.google.com/drive/folders/1nRphkwDZ74p-Al_O_X3feR24aRyEaJDY?usp=sharing
+
+Baiduyun: https://pan.baidu.com/s/1ZRmPQYahqvbkMoH_B6v1xw (access code: 29qw)
+
+Also, the suggestions for the re-training are,
+
+Pavia University:
+
+ViT: `python demo.py --dataset='Pavia' --epoch=1000 --patches=1 --band_patches=1 --mode='ViT' --weight_decay=0`
+
+Pixel-wise SpectralFormer: `python demo.py --dataset='Pavia' --epoches=500 --patches=1 --band_patches=3 --mode='CAF' --weight_decay=5e-3`
+
+Patch-wise SpectralFormer: `python demo.py --dataset='Pavia' --epoches=480 --patches=7 --band_patches=7 --mode='CAF' --weight_decay=5e-3`
+
+Houston:
+
+ViT: `python demo.py --dataset='Houston' --epoch=900 --patches=1 --band_patches=1 --mode='ViT' --weight_decay=0`
+
+Pixel-wise SpectralFormer: `python demo.py --dataset='Houston' --epoches=520 --patches=1 --band_patches=3 --mode='CAF' --weight_decay=5e-3`
+
+Patch-wise SpectralFormer: `python demo.py --dataset='Houston' --epoches=600 --patches=7 --band_patches=3 --mode='CAF' --weight_decay=5e-3`
+
+The suggestions for the testing are,
+
+Pavia:
+
+ViT: `python demo.py --dataset='Pavia' --flag_test=test --patches=1 --band_patches=1 --mode='ViT'`
+
+Pixel-wise SpectralFormer: `python demo.py --dataset='Pavia' --flag_test=test --patches=1 --band_patches=3 --mode='CAF'`
+
+Patch-wise SpectralFormer: `python demo.py --dataset='Pavia' --flag_test=test --patches=7 --band_patches=7 --mode='CAF'`
+
+Houston:
+
+ViT: `python demo.py --dataset='Houston' --flag_test=test --patches=1 --band_patches=1 --mode='ViT'`
+
+Pixel-wise SpectralFormer: `python demo.py --dataset='Houston' --flag_test=test --patches=1 --band_patches=3 --mode='CAF'`
+
+Patch-wise SpectralFormer: `python demo.py --dataset='Houston' --flag_test=test --patches=7 --band_patches=3 --mode='CAF'`
+
+If you encounter memory error when testing the patch-wise SpectralFormer on the Pavia and Houston datasets, commenting trainloader and some other unnecessary part of code or separting the whole image into several subimages both work.
 
 If you want to run the code in your own data, you can accordingly change the input (e.g., data, labels) and tune the parameters.
 
