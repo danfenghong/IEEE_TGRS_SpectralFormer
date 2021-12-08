@@ -70,5 +70,3 @@ Contact Information:
 
 Danfeng Hong: hongdf@aircas.ac.cn<br>
 Danfeng Hong is with the Key Laboratory of Digital Earth Science, Aerospace Information Research Institute, Chinese Academy of Sciences, 100094 Beijing, China. 
-
-If emergency, you can also add my QQ: 345088114.
