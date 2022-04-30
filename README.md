@@ -115,3 +115,6 @@ Contact Information:
 
 Danfeng Hong: hongdf@aircas.ac.cn<br>
 Danfeng Hong is with the Key Laboratory of Digital Earth Science, Aerospace Information Research Institute, Chinese Academy of Sciences, 100094 Beijing, China. 
+
+Zhu Han: hanzhu19@mails.ucas.ac.cn<br>
+Zhu Han is with the Key Laboratory of Digital Earth Science, Aerospace Information Research Institute, Chinese Academy of Sciences, Beijing 100094, China, and also with the College of Resources and Environment, University of Chinese Academy of Sciences, Beijing 100049, China.
