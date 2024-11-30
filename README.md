@@ -1,6 +1,6 @@
 # Spectralformer: Rethinking hyperspectral image classification with transformers
 
-[Danfeng Hong](https://sites.google.com/view/danfeng-hong), [Zhu Han](https://www.researchgate.net/profile/Zhu-Han-2), [Jing Yao](https://scholar.google.com/citations?user=1SHd5ygAAAAJ&hl=en), [Lianru Gao](https://scholar.google.com/citations?hl=en&user=f6OnhtcAAAAJ), [Bing Zhang](http://english.radi.cas.cn/Education/PhDS/201401/t20140109_115415.html), [Antonio Plaza](https://scholar.google.com/citations?user=F1UAj8oAAAAJ&hl=en), [Jocelyn Chanussot](http://jocelyn-chanussot.net/)
+[Danfeng Hong](https://sites.google.com/view/danfeng-hong), Zhu Han, Jing Yao, Lianru Gao, [Bing Zhang](http://english.radi.cas.cn/Education/PhDS/201401/t20140109_115415.html), [Antonio Plaza](https://scholar.google.com/citations?user=F1UAj8oAAAAJ&hl=en), [Jocelyn Chanussot](http://jocelyn-chanussot.net/)
 
 ___________
 
