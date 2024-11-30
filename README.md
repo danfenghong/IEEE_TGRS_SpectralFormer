@@ -113,8 +113,6 @@ You should have received a copy of the GNU General Public License along with thi
 Contact Information:
 --------------------
 
-Danfeng Hong: hongdf@aircas.ac.cn<br>
-Danfeng Hong is with the Key Laboratory of Digital Earth Science, Aerospace Information Research Institute, Chinese Academy of Sciences, 100094 Beijing, China. 
+Danfeng Hong: hongdanfeng1989@gmail.com<br>
+Danfeng Hong is with the Aerospace Information Research Institute, Chinese Academy of Sciences, 100094 Beijing, China. 
 
-Zhu Han: hanzhu19@mails.ucas.ac.cn<br>
-Zhu Han is with the Key Laboratory of Digital Earth Science, Aerospace Information Research Institute, Chinese Academy of Sciences, Beijing 100094, China, and also with the College of Resources and Environment, University of Chinese Academy of Sciences, Beijing 100049, China.
